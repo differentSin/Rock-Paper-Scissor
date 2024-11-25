@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1></h1>
+    <h2></h2>
+    <div class="image">
+        <button id="Rock">
+            <img src="./images/rock-400x374.png" alt="Rock" width="200" height="200">
+        </button>
+        <button id="Paper">
+            <img src="./images/paper-400x374.png" alt="Paper" width="200" height="200">
+        </button>
+        <button id="Scissor">
+            <img src="./images/scissors-400x374.png" alt="Scissor" width="200" height="200">
+        </button>
+    </div>
+</body>
+
+
+<script>
+    const title = document.querySelector('h1');
+    title.textContent = "Welcome to my updated Rock Paper Scissor";
+    
+    window.onload = function() {
+    var audio = document.querySelector("#audio");
+    audio.muted = false;
+    audio.play();
+    };
+
+    const buttons = document.querySelectorAll('button');
+    let userInput = '';
+    let buttonClicked = false;
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            userInput = button.id;
+            console.log(userInput);
+            buttonClicked = true;
+            play();
+        });
+    });
+
+    
+    let RPS = function() {
+        let randomReal = function() {
+            return Math.floor(Math.random() * 10);
+        };
+        let random = randomReal();
+
+        if (random <= 3 && random > 0) {
+            return "Rock";
+        }
+        else if (random <= 6 && random > 3) {
+            return "Paper";
+        }
+        else {return "Scissor";}
+    };
+
+    let win = 0, lose = 0, draw = 0;
+    let roundNo = 1;
+
+    const result = document.createElement('div');
+    
+    const h2 = document.querySelector('h2');
+    const cont = document.createElement('button');
+    cont.textContent = 'Show summaries';
+    cont.addEventListener('click', () => {
+        finalResult();
+    });
+
+    function play() {
+        
+        h2.textContent = `Round ${roundNo}`;
+        
+        
+        let computerTurn = RPS();
+        
+        
+        if (computerTurn === userInput) {
+            
+            result.innerHTML = `You played <strong>${userInput}</strong>. <br>Computer played <strong>${computerTurn}</strong>. Draw!<br>`;
+            ++draw;
+        } else if ((computerTurn == 'Rock' && userInput == 'Paper') || 
+                    (computerTurn == 'Scissor' && userInput == 'Rock') ||
+                    (computerTurn == 'Paper' && userInput == 'Scissor')) {
+
+                        result.innerHTML = `You played <strong>${userInput}</strong>. <br>Computer played <strong>${computerTurn}</strong>. You win!<br>`;
+                        ++win;
+                    }
+        else {
+            result.innerHTML = `You played <strong>${userInput}</strong>. <br>Computer played <strong>${computerTurn}</strong>. You lost!<br>`;
+            ++lose;
+        }
+        roundNo++;
+        buttonClicked = false;
+        
+        result.appendChild(cont);
+    };
+
+    let finalResult = function() {
+        const summaries = document.createElement('div');
+        summaries.classList.add('summaries');
+
+        if (win > lose) {
+            console.log("You win! " + "W: " + win + " L: " + lose + " Draw: " + draw);
+            
+        }else if (draw >= 3) {
+            console.log("It's a tie!" + " Draw: " + draw);
+        }
+        else {
+            console.log("Boohoo u lose..." + " W: " + win + " L: " + lose + " Draw: " + draw);
+        }
+        summaries.textContent = `Win: ${win}, Lost: ${lose}, Draw: ${draw}`;
+        result.appendChild(summaries);
+    }
+    document.body.appendChild(result);   
+    
+</script>
+
+
+<style>
+    * {
+        
+        
+        
+        background-color:darkkhaki;
+        
+    }
+
+    .image {
+        display: flex;
+        
+        justify-content: space-around;
+
+    }
+
+    h1, h2, div {
+        text-align: center;
+    }
+   
+    h1 {
+            font-size: 70px;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: glow 1.5s ease-in-out infinite, shine 500s linear infinite; 
+        }
+
+        /* Glowing Effect */
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff, 0 0 50px #ff00ff, 0 0 75px #ff00ff;
+            }
+            50% {
+                text-shadow: 0 0 10px #fff, 0 0 15px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff, 0 0 50px #ff00ff, 0 0 75px #ff00ff;
+            }
+            100% {
+                text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #ff00ff, 0 0 30px #ff00ff, 0 0 40px #ff00ff, 0 0 50px #ff00ff, 0 0 75px #ff00ff;
+            }
+        }
+
+        /* Multi-Color Shiny Effect */
+        @keyframes shine {
+            0% {
+                background-position: -200%;
+                background-size: 400% 100%;
+            }
+            50% {
+                background-position: 200%;
+                background-size: 400% 100%;
+            }
+            100% {
+                background-position: -200%;
+                background-size: 400% 100%;
+            }
+        }
+
+        /* Apply the shiny effect */
+        h1 {
+            background: linear-gradient(90deg, violet, indigo, blue, green, yellow, orange, red, violet);
+            background-size: 400% 100%;
+            color: transparent; /* Make the text transparent to show the gradient */
+            -webkit-background-clip: text; /* For Chrome, Safari */
+            background-clip: text; /* For Firefox */
+            animation: shine 20s linear infinite; /* Shine animation with color cycling */
+        }
+    .summaries {
+        font-weight: 900;
+        font-size: larger;
+        background-color:darkturquoise;
+        color:hotpink;
+    }
+</style>
+
+<audio id="audio" autoplay loop>
+    <source src="POLO & PAN  Nagori (official audio).mp3" type="audio/mp3">
+</audio>
+</html>
